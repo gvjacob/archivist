@@ -1,20 +1,16 @@
 package main
 
 import (
+	"archivist/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
-
-	"github.com/lpernett/godotenv"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	utils.LoadDotEnv()
 
 	params := url.Values{}
 	params.Set("client_id", os.Getenv("SPOTIFY_CLIENT_ID"))
