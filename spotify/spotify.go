@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func Get(endpoint string) (*http.Response, error) {
@@ -52,5 +53,17 @@ func UserPlaylists() ([]Playlist, error) {
 		return nil, err
 	}
 
-	return userPlaylistsResponse.Items, nil
+	return filterPlaylistsByArchivist(userPlaylistsResponse.Items), nil
+}
+
+func filterPlaylistsByArchivist(playlists []Playlist) []Playlist {
+	archivistPlaylists := []Playlist{}
+
+	for _, playlist := range playlists {
+		if strings.HasPrefix(playlist.Description, "Archivist:") {
+			archivistPlaylists = append(archivistPlaylists, playlist)
+		}
+	}
+
+	return archivistPlaylists
 }
