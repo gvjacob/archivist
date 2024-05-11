@@ -9,14 +9,19 @@ import (
 func main() {
 	utils.LoadDotEnv()
 
-	playlists, err := spotify.UserPlaylists()
+	// playlists, err := spotify.UserPlaylists()
+
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	userSavedTracks, err := spotify.UserSavedTracks()
 
 	if err != nil {
 		panic(err)
 	}
 
-	for _, playlist := range playlists {
-		fmt.Println(playlist.Name)
-		fmt.Println(playlist.Description)
+	for _, track := range userSavedTracks {
+		fmt.Println(track.AddedAt, track.Track.Name)
 	}
 }
