@@ -19,8 +19,8 @@ type CurrentUserPlaylistsResponse struct {
 	Items []Playlist `json:"items"`
 }
 
-func UserPlaylists() ([]Playlist, error) {
-	resp, err := Get("https://api.spotify.com/v1/me/playlists?limit=50")
+func (c *SpotifyClient) UserPlaylists() ([]Playlist, error) {
+	resp, err := c.Get("https://api.spotify.com/v1/me/playlists?limit=50")
 
 	if err != nil {
 		return nil, err

@@ -14,7 +14,7 @@ type AddTracksToPlaylistResponse struct {
 	SnapshotID string `json:"snapshot_id"`
 }
 
-func AddTracksToPlaylist(playlist Playlist, track Track) (string, error) {
+func (c *SpotifyClient) AddTracksToPlaylist(playlist Playlist, track Track) (string, error) {
 	requestBody := AddTracksToPlaylistRequest{
 		URIs: []string{track.URI},
 	}
@@ -25,7 +25,7 @@ func AddTracksToPlaylist(playlist Playlist, track Track) (string, error) {
 		return "", err
 	}
 
-	resp, err := Post("https://api.spotify.com/v1/playlists/"+playlist.ID+"/tracks", jsonBody)
+	resp, err := c.Post("https://api.spotify.com/v1/playlists/"+playlist.ID+"/tracks", jsonBody)
 
 	if err != nil {
 		return "", err

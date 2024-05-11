@@ -37,8 +37,8 @@ type UserSavedTracksResponse struct {
 	Items []SavedTrack `json:"items"`
 }
 
-func UserSavedTracks() ([]SavedTrack, error) {
-	resp, err := Get("https://api.spotify.com/v1/me/tracks?limit=1")
+func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
+	resp, err := c.Get("https://api.spotify.com/v1/me/tracks?limit=2")
 
 	if err != nil {
 		return nil, err
