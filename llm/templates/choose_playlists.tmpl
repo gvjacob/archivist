@@ -1,0 +1,51 @@
+Given information about a Spotify track and a user's Spotify playlists, list out the IDs of the playlists
+that the track should be saved into. The track can be saved into multiple playlists. ONLY return the IDs.
+If there are multiple playlists, use a newline to separate the IDs.
+
+---
+# Track
+Name: Let It Be
+Artists: The Beatles
+Album: Let It Be (Remastered)
+Album Type: album
+Album Release Date: 1970
+Genres: Rock, Classic Rock
+Duration Minutes: 4
+Explicit: false
+
+# Playlists
+ID: 2up3OPMp9Tb4dAKM2erWXQ
+Name: Beatlesmania
+Description: Best of Beatles
+
+ID: 3vYjW9f6f3J4b9ZbJ7j1fA
+Name: Folk
+Description: Only folk songs here!
+
+ID: 4vYjW9f6f3J4b9ZbJ7j1fA
+Name: vulfever
+Description: My favorite songs by Vulfpeck
+
+# Answer
+2up3OPMp9Tb4dAKM2erWXQ
+
+---
+# Track
+Name: {{ .Track.Name }}
+Artists: {{ range .Track.Artists }}{{ .Name }}, {{ end }}
+Album: {{ .Track.Album.Name }}
+Album Type: {{ .Track.Album.Type }}
+Album Release Date: {{ .Track.Album.ReleaseDate }}
+Genres: {{ range .Track.Artists }}{{ join .Genres ", " }}, {{ end }}
+Duration Minutes: {{ msToMin .Track.DurationMs }}
+Explicit: {{ .Track.Explicit }}
+
+# Playlists
+{{ range .Playlists }}
+ID: {{ .ID }}
+Name: {{ .Name }}
+Description: {{ removeArchivistDescriptionTag .Description }}
+{{ end }}
+
+# Answer
+
