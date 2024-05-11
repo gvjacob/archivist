@@ -25,12 +25,15 @@ func main() {
 	}
 
 	for _, track := range userSavedTracks {
-		prompt, err := llm.ChoosePlaylistsPrompt(playlists, track.Track)
+		playlists, err := llm.GetPlaylistsToSaveTrackInto(playlists, track.Track)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Println(prompt)
+		for _, playlist := range playlists {
+			spotify.AddTracksToPlaylist(playlist, track.Track)
+			log.Info(fmt.Sprintf("Added track %s to playlist %s", track.Track.Name, playlist.Name))
+		}
 	}
 }
