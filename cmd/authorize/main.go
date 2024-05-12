@@ -15,7 +15,7 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-var (
+const (
 	localAddress = "localhost:8080"
 	redirectURI  = "http://localhost:8080/callback"
 )
