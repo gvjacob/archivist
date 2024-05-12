@@ -11,6 +11,7 @@ import (
 func LoadDotEnv() {
 	if os.Getenv("RAILWAY_ENVIRONMENT_NAME") == "production" {
 		log.Info("Running in production mode")
+		return
 	}
 
 	if err := godotenv.Load(); err != nil {
