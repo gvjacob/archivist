@@ -6,6 +6,7 @@ import (
 	"archivist/storage"
 	"archivist/utils"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/charmbracelet/log"
@@ -14,7 +15,7 @@ import (
 func main() {
 	utils.LoadDotEnv()
 
-	db, err := storage.NewDatabase("archivist.db")
+	db, err := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
 
 	if err != nil {
 		log.Error("Failed to connect to database")
