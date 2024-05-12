@@ -3,9 +3,9 @@ package main
 import (
 	"archivist/llm"
 	"archivist/spotify"
+	"archivist/storage"
 	"archivist/utils"
 	"fmt"
-	"os"
 
 	"github.com/charmbracelet/log"
 )
@@ -13,11 +13,25 @@ import (
 func main() {
 	utils.LoadDotEnv()
 
-	client := spotify.NewSpotifyClient(os.Getenv("SPOTIFY_ACCESS_TOKEN"))
+	db, err := storage.NewDatabase("archivist.db")
+
+	if err != nil {
+		log.Error("Failed to connect to database")
+		log.Fatal(err)
+	}
+
+	users := storage.NewUsers(db)
+	user, err := users.GetUser()
+
+	if err != nil {
+		log.Error("Failed to fetch user")
+		log.Fatal(err)
+	}
+
+	client := spotify.NewSpotifyClient(user, users)
 	playlists, err := client.UserPlaylists()
 
 	if err != nil || len(playlists) == 0 {
-		log.Error("Failed to fetch playlists")
 		log.Fatal(err)
 	}
 

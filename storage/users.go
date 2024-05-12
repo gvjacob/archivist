@@ -24,3 +24,13 @@ func (u *UsersTable) GetUser() (*User, error) {
 
 	return user, nil
 }
+
+func (u *UsersTable) UpdateUser(user *User) error {
+	_, err := u.db.Exec("UPDATE users SET access_token = $1, refresh_token = $2 WHERE id = $3", user.AccessToken, user.RefreshToken, user.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

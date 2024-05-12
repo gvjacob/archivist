@@ -3,7 +3,6 @@ package main
 import (
 	"archivist/utils"
 	"context"
-	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
 	"io"
@@ -81,7 +80,7 @@ func getSpotifyAccessToken(code string) (SpotifyAuthTokens, error) {
 
 	req, _ := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(auth.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Basic "+getBase64EncodedSpotifyAuth())
+	req.Header.Set("Authorization", utils.GetBasicAuthorizationHeader())
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -108,9 +107,4 @@ func getSpotifyAccessToken(code string) (SpotifyAuthTokens, error) {
 		AccessToken:  accessToken.(string),
 		RefreshToken: refreshToken.(string),
 	}, nil
-}
-
-func getBase64EncodedSpotifyAuth() string {
-	bytes := []byte(os.Getenv("SPOTIFY_CLIENT_ID") + ":" + os.Getenv("SPOTIFY_CLIENT_SECRET"))
-	return b64.URLEncoding.EncodeToString(bytes)
 }
