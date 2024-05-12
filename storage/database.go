@@ -17,7 +17,8 @@ func NewDatabase(file string) (*Database, error) {
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       access_token TEXT NOT NULL,
-      refresh_token TEXT NOT NULL
+      refresh_token TEXT NOT NULL,
+      last_archived TEXT
     );
   `
 

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 )
 
 type Artist struct {
@@ -37,8 +38,8 @@ type UserSavedTracksResponse struct {
 	Items []SavedTrack `json:"items"`
 }
 
-func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
-	resp, err := c.Get("https://api.spotify.com/v1/me/tracks?limit=2")
+func (c *SpotifyClient) UserSavedTracks(since time.Time) ([]SavedTrack, error) {
+	resp, err := c.Get("https://api.spotify.com/v1/me/tracks")
 
 	if err != nil {
 		return nil, err
@@ -57,5 +58,16 @@ func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
 		return nil, err
 	}
 
-	return userSavedTracksResponse.Items, nil
+	savedTracks := userSavedTracksResponse.Items
+	var tracksAfter []SavedTrack
+
+	for _, track := range savedTracks {
+		addedAt, err := time.Parse(time.RFC3339, track.AddedAt)
+
+		if err == nil && since.Before(addedAt) {
+			tracksAfter = append(tracksAfter, track)
+		}
+	}
+
+	return tracksAfter, nil
 }

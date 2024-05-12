@@ -6,6 +6,7 @@ import (
 	"archivist/storage"
 	"archivist/utils"
 	"fmt"
+	"time"
 
 	"github.com/charmbracelet/log"
 )
@@ -35,12 +36,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userSavedTracks, err := client.UserSavedTracks()
+	userSavedTracks, err := client.UserSavedTracks(user.LastArchived)
 
-	if err != nil || len(userSavedTracks) == 0 {
+	if err != nil {
 		log.Error("Failed to fetch user saved tracks")
 		log.Fatal(err)
 	}
+
+	if len(userSavedTracks) == 0 {
+		log.Warn("No new tracks to archive")
+		return
+	}
+
+	var hasAddedTracks bool
 
 	for _, track := range userSavedTracks {
 		playlists, err := llm.GetPlaylistsToSaveTrackInto(playlists, track.Track)
@@ -51,13 +59,20 @@ func main() {
 		}
 
 		if len(playlists) == 0 {
-			log.Info(fmt.Sprintf("No playlists selected for track %s", track.Track.Name))
+			log.Info(fmt.Sprintf("No playlists selected for track '%s'", track.Track.Name))
 			continue
 		}
 
 		for _, playlist := range playlists {
 			client.AddTracksToPlaylist(playlist, track.Track)
 			log.Info(fmt.Sprintf("Added track '%s' to playlist '%s'", track.Track.Name, playlist.Name))
+
+			hasAddedTracks = true
 		}
+	}
+
+	if hasAddedTracks {
+		user.LastArchived = time.Now().UTC()
+		users.UpdateUser(user)
 	}
 }
