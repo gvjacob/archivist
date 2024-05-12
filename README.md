@@ -15,3 +15,7 @@ Archivist lets you create "smart playlists". These playlists can describe, with 
    ```
    go get
    ```
+
+## Feature Ideas
+
+- Generate a description that accurately describes a the songs in a non-archivist playlist.
