@@ -39,7 +39,7 @@ type UserSavedTracksResponse struct {
 }
 
 func (c *SpotifyClient) UserSavedTracks(since time.Time) ([]SavedTrack, error) {
-	resp, err := c.Get("https://api.spotify.com/v1/me/tracks")
+	resp, err := c.Get("https://api.spotify.com/v1/me/tracks?limit=20")
 
 	if err != nil {
 		return nil, err
