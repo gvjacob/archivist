@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/log"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 type Database struct {
@@ -33,7 +33,7 @@ func NewDatabase(file string) (*Database, error) {
     INSERT INTO users (access_token, refresh_token, last_archived) VALUES (?, ?, ?);
   `
 
-	db, err := sql.Open("sqlite3", file)
+	db, err := sql.Open("sqlite", file)
 
 	if err != nil {
 		return nil, err
