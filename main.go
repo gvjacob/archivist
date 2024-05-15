@@ -60,7 +60,7 @@ func main() {
 		}
 
 		if len(playlists) == 0 {
-			log.Info(fmt.Sprintf("No playlists selected for track '%s'", track.Track.Name))
+			log.Warn(fmt.Sprintf("No playlists selected for track '%s'", track.Track.Name))
 			continue
 		}
 
