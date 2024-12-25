@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	localAddress = "localhost:8080"
-	redirectURI  = "http://localhost:8080/callback"
+	localAddress = "localhost:3000"
+	redirectURI  = "http://localhost:3000/callback"
 )
 
 // Retrieve authorization code from Spotify
