@@ -23,7 +23,7 @@ func (u *UsersTable) GetUser() (*User, error) {
 	user := &User{LastArchived: time.Now().UTC()}
 
 	var lastArchived string
-	err := u.db.QueryRow("SELECT * FROM users LIMIT 1").Scan(&user.ID, &user.AccessToken, &user.RefreshToken, &lastArchived)
+	err := u.QueryRow("SELECT * FROM users LIMIT 1").Scan(&user.ID, &user.AccessToken, &user.RefreshToken, &lastArchived)
 
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (u *UsersTable) GetUser() (*User, error) {
 }
 
 func (u *UsersTable) UpdateUser(user *User) error {
-	_, err := u.db.Exec(
+	_, err := u.Exec(
 		"UPDATE users SET access_token = $1, refresh_token = $2, last_archived = $3 WHERE id = $4",
 		user.AccessToken,
 		user.RefreshToken,

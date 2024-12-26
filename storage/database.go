@@ -9,7 +9,7 @@ import (
 
 type Database struct {
 	mu sync.Mutex
-	db *sql.DB
+	*sql.DB
 }
 
 func NewDatabase(file string) (*Database, error) {
@@ -19,5 +19,5 @@ func NewDatabase(file string) (*Database, error) {
 		return nil, err
 	}
 
-	return &Database{db: db}, nil
+	return &Database{DB: db}, nil
 }

@@ -1,9 +1,9 @@
 package commands
 
 import (
+	"archivist/storage"
 	"archivist/utils"
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"io"
@@ -22,27 +22,34 @@ const (
 	redirectURI  = "http://localhost:3000/callback"
 )
 
+type client struct {
+	database *storage.Database
+}
+
 type SpotifyAuthTokens struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
 
 func Initialize() {
-	if err := createTables(); err != nil {
+	db, _ := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
+	c := &client{database: db}
+
+	if err := c.createTables(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := seedUserData(); err != nil {
+	if err := c.seedUserData(); err != nil {
 		log.Fatal(err)
 	}
 
 	log.Info("Successfully seeded user data")
 }
 
-func createTables() error {
+func (c client) createTables() error {
 	log.Info("Creating tables...")
 
-	const createTablesQuery = `
+	const createTablesSQL = `
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       access_token TEXT NOT NULL,
@@ -59,20 +66,14 @@ func createTables() error {
     );
   `
 
-	db, err := sql.Open("sqlite", os.Getenv("SQLITE_FILE_PATH"))
-
-	if err != nil {
-		return err
-	}
-
-	if _, err := db.Exec(createTablesQuery); err != nil {
+	if _, err := c.database.Exec(createTablesSQL); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func seedUserData() error {
+func (c client) seedUserData() error {
 	log.Info("Seeding user data...")
 
 	authTokens, err := retrieveAuthTokensFromDotEnv()
@@ -88,18 +89,12 @@ func seedUserData() error {
 		return err
 	}
 
-	db, err := sql.Open("sqlite", os.Getenv("SQLITE_FILE_PATH"))
-
-	if err != nil {
-		return err
-	}
-
-	insertUserQuery := `
+	insertUserSQL := `
     DELETE FROM users;
     INSERT INTO users (access_token, refresh_token) VALUES (?, ?);
   `
 
-	_, err = db.Exec(insertUserQuery, authTokens.AccessToken, authTokens.RefreshToken)
+	_, err = c.database.Exec(insertUserSQL, authTokens.AccessToken, authTokens.RefreshToken)
 
 	if err != nil {
 		return err
