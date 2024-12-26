@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archivist/commands"
 	"archivist/llm"
 	"archivist/spotify"
 	"archivist/storage"
@@ -15,6 +16,16 @@ import (
 func main() {
 	utils.LoadDotEnv()
 
+	command, found := utils.SafeGet(os.Args, 1)
+
+	if found && command == "init" {
+		commands.Initialize()
+	} else {
+		archive()
+	}
+}
+
+func archive() {
 	db, err := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
 
 	if err != nil {
