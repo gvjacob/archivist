@@ -17,16 +17,11 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const (
-	localAddress = "localhost:3000"
-	redirectURI  = "http://localhost:3000/callback"
-)
-
 type client struct {
 	database *storage.Database
 }
 
-type SpotifyAuthTokens struct {
+type spotifyAuthTokens struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
@@ -103,7 +98,7 @@ func (c client) seedUserData() error {
 	return nil
 }
 
-func retrieveAuthTokensFromDotEnv() (*SpotifyAuthTokens, error) {
+func retrieveAuthTokensFromDotEnv() (*spotifyAuthTokens, error) {
 	accessToken := os.Getenv("SPOTIFY_ACCESS_TOKEN")
 	refreshToken := os.Getenv("SPOTIFY_REFRESH_TOKEN")
 
@@ -111,14 +106,14 @@ func retrieveAuthTokensFromDotEnv() (*SpotifyAuthTokens, error) {
 		return nil, errors.New("No Spotify access or refresh token found")
 	}
 
-	return &SpotifyAuthTokens{AccessToken: accessToken, RefreshToken: refreshToken}, nil
+	return &spotifyAuthTokens{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }
 
-func authorize() (*SpotifyAuthTokens, error) {
+func authorize() (*spotifyAuthTokens, error) {
 	params := url.Values{}
 	params.Set("client_id", os.Getenv("SPOTIFY_CLIENT_ID"))
 	params.Set("response_type", "code")
-	params.Set("redirect_uri", redirectURI)
+	params.Set("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
 	params.Set("scope", "playlist-read-private playlist-modify-private playlist-modify-public user-library-read")
 
 	url := "https://accounts.spotify.com/authorize?" + params.Encode()
@@ -127,7 +122,7 @@ func authorize() (*SpotifyAuthTokens, error) {
 	mux := http.NewServeMux()
 
 	server := &http.Server{
-		Addr:    localAddress,
+		Addr:    os.Getenv("LOCAL_ADDRESS"),
 		Handler: mux,
 	}
 
@@ -156,12 +151,12 @@ func authorize() (*SpotifyAuthTokens, error) {
 	return tokens, nil
 }
 
-func getSpotifyAccessToken(code string) (*SpotifyAuthTokens, error) {
+func getSpotifyAccessToken(code string) (*spotifyAuthTokens, error) {
 	auth := url.Values{}
 
 	auth.Set("grant_type", "authorization_code")
 	auth.Set("code", code)
-	auth.Set("redirect_uri", redirectURI)
+	auth.Set("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
 
 	req, _ := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(auth.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -182,7 +177,7 @@ func getSpotifyAccessToken(code string) (*SpotifyAuthTokens, error) {
 		return nil, errors.New(string(body))
 	}
 
-	var tokens SpotifyAuthTokens
+	var tokens spotifyAuthTokens
 	json.Unmarshal([]byte(body), &tokens)
 
 	return &tokens, nil
