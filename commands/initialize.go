@@ -34,6 +34,8 @@ func Initialize() {
 		log.Fatal(err)
 	}
 
+	log.Info("Successfully created tables")
+
 	if err := c.seedUserData(); err != nil {
 		log.Fatal(err)
 	}
