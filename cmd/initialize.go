@@ -27,9 +27,7 @@ type SpotifyAuthTokens struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func main() {
-	utils.LoadDotEnv()
-
+func Initialize() {
 	if err := createTables(); err != nil {
 		log.Fatal(err)
 	}
