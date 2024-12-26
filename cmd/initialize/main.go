@@ -77,7 +77,14 @@ func createTables() error {
 func seedUserData() error {
 	log.Info("Seeding user data...")
 
-	authTokens, err := authorize()
+	authTokens, err := retrieveAuthTokensFromDotEnv()
+
+	if err == nil {
+		log.Info("Retrieved Spotify access and refresh tokens from environment")
+	} else {
+		log.Warn("No Spotify access or refresh token found from environment. Authorizing...")
+		authTokens, err = authorize()
+	}
 
 	if err != nil {
 		return err
@@ -100,6 +107,17 @@ func seedUserData() error {
 	}
 
 	return nil
+}
+
+func retrieveAuthTokensFromDotEnv() (*SpotifyAuthTokens, error) {
+	accessToken := os.Getenv("SPOTIFY_ACCESS_TOKEN")
+	refreshToken := os.Getenv("SPOTIFY_REFRESH_TOKEN")
+
+	if accessToken == "" || refreshToken == "" {
+		return nil, errors.New("No Spotify access or refresh token found")
+	}
+
+	return &SpotifyAuthTokens{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }
 
 func authorize() (*SpotifyAuthTokens, error) {
