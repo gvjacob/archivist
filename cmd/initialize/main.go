@@ -97,6 +97,7 @@ func seedUserData() error {
 	}
 
 	insertUserQuery := `
+    DELETE FROM users;
     INSERT INTO users (access_token, refresh_token) VALUES (?, ?);
   `
 
