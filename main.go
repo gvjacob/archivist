@@ -73,6 +73,12 @@ func archive() {
 
 		if len(playlists) == 0 {
 			log.Warn(fmt.Sprintf("No playlists selected for track '%s'", track.Track.Name))
+
+			archivedTracks = append(archivedTracks, storage.ArchivedTrack{
+				UserID:  user.ID,
+				TrackID: track.Track.ID,
+			})
+
 			continue
 		}
 
