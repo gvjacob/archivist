@@ -55,7 +55,8 @@ func (c client) createTables() error {
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       access_token TEXT NOT NULL,
-      refresh_token TEXT NOT NULL
+      refresh_token TEXT NOT NULL,
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
     );
 
     CREATE TABLE IF NOT EXISTS archived_tracks (

@@ -19,6 +19,7 @@ type Album struct {
 }
 
 type Track struct {
+	ID         string   `json:"id"`
 	Name       string   `json:"name"`
 	URI        string   `json:"uri"`
 	Album      Album    `json:"album"`
@@ -50,7 +51,7 @@ func (c *SpotifyClient) LastArchiveTime() (time.Time, error) {
   `, c.User.ID).Scan(&lastArchivedTimeStamp)
 
 	if lastArchivedTimeStamp == 0 {
-		return time.Now(), nil
+		return time.Unix(int64(c.User.CreatedAt), 0), nil
 	}
 
 	return time.Unix(int64(lastArchivedTimeStamp), 0), nil

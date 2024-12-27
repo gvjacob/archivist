@@ -8,6 +8,7 @@ type User struct {
 	ID           string
 	AccessToken  string
 	RefreshToken string
+	CreatedAt    int
 }
 
 func NewUsers(db *Database) *UsersTable {
@@ -16,7 +17,7 @@ func NewUsers(db *Database) *UsersTable {
 
 func (u *UsersTable) GetUser() (*User, error) {
 	user := &User{}
-	err := u.QueryRow("SELECT * FROM users LIMIT 1").Scan(&user.ID, &user.AccessToken, &user.RefreshToken)
+	err := u.QueryRow("SELECT * FROM users LIMIT 1").Scan(&user.ID, &user.AccessToken, &user.RefreshToken, &user.CreatedAt)
 
 	if err != nil {
 		return nil, err

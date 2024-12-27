@@ -88,6 +88,7 @@ func archive() {
 
 			archivedTracks = append(archivedTracks, storage.ArchivedTrack{
 				UserID:     user.ID,
+				TrackID:    track.Track.ID,
 				PlaylistID: playlist.ID,
 			})
 		}

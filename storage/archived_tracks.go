@@ -8,6 +8,7 @@ type ArchivedTracksTable struct {
 
 type ArchivedTrack struct {
 	UserID     string
+	TrackID    string
 	PlaylistID string
 }
 
@@ -26,8 +27,8 @@ func (a *ArchivedTracksTable) Insert(tracks []ArchivedTrack) error {
 
 	for _, track := range tracks {
 		_, err := tx.Exec(`
-      INSERT INTO archived_tracks (user_id, playlist_id, created_at) VALUES ($1, $2, $3)
-    `, track.UserID, track.PlaylistID, createdAt)
+      INSERT INTO archived_tracks (user_id, track_id, playlist_id, created_at) VALUES ($1, $2, $3, $4)
+    `, track.UserID, track.TrackID, track.PlaylistID, createdAt)
 
 		if err != nil {
 			tx.Rollback()
