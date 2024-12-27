@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"time"
+
+	"github.com/charmbracelet/log"
 )
 
 type Artist struct {
@@ -40,6 +42,7 @@ type UserSavedTracksResponse struct {
 
 func (c *SpotifyClient) LastArchiveTime() (time.Time, error) {
 	var lastArchivedTimeStamp int
+
 	c.UsersTable.QueryRow(`
     SELECT created_at
     FROM archived_tracks
@@ -47,6 +50,10 @@ func (c *SpotifyClient) LastArchiveTime() (time.Time, error) {
     ORDER BY created_at DESC
     LIMIT 1
   `, c.User.ID).Scan(&lastArchivedTimeStamp)
+
+	if lastArchivedTimeStamp == 0 {
+		return time.Now(), nil
+	}
 
 	return time.Unix(int64(lastArchivedTimeStamp), 0), nil
 }
