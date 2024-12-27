@@ -8,7 +8,6 @@ import (
 	"archivist/utils"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/charmbracelet/log"
 )
@@ -36,18 +35,22 @@ func archive() {
 	user, err := users.GetUser()
 
 	if err != nil {
-		log.Error("Failed to fetch user")
 		log.Fatal(err)
 	}
 
 	client := spotify.NewSpotifyClient(user, users)
 	playlists, err := client.UserPlaylists()
 
-	if err != nil || len(playlists) == 0 {
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	userSavedTracks, err := client.UserSavedTracks(user.LastArchived)
+	if len(playlists) == 0 {
+		log.Warn("No playlists found. Exiting...")
+		os.Exit(0)
+	}
+
+	userSavedTracks, err := client.UserSavedTracks()
 
 	if err != nil {
 		log.Error("Failed to fetch user saved tracks")
@@ -83,7 +86,6 @@ func archive() {
 	}
 
 	if hasAddedTracks {
-		user.LastArchived = time.Now().UTC()
 		users.UpdateUser(user)
 	}
 }

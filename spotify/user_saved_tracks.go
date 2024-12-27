@@ -38,7 +38,26 @@ type UserSavedTracksResponse struct {
 	Items []SavedTrack `json:"items"`
 }
 
-func (c *SpotifyClient) UserSavedTracks(since time.Time) ([]SavedTrack, error) {
+func (c *SpotifyClient) LastArchiveTime() (time.Time, error) {
+	var lastArchivedTimeStamp int
+	c.UsersTable.QueryRow(`
+    SELECT created_at
+    FROM archived_tracks
+    WHERE user_id == $1
+    ORDER BY created_at DESC
+    LIMIT 1
+  `, c.User.ID).Scan(&lastArchivedTimeStamp)
+
+	return time.Unix(int64(lastArchivedTimeStamp), 0), nil
+}
+
+func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
+	since, err := c.LastArchiveTime()
+
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := c.Get("https://api.spotify.com/v1/me/tracks?limit=20")
 
 	if err != nil {
