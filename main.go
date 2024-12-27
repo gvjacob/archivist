@@ -50,7 +50,7 @@ func archive() {
 		os.Exit(0)
 	}
 
-	userSavedTracks, err := client.UserSavedTracks()
+	userSavedTracks, err := client.UserSavedTracksSinceLastArchive()
 
 	if err != nil {
 		log.Error("Failed to fetch user saved tracks")

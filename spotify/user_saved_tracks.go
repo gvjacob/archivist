@@ -56,7 +56,7 @@ func (c *SpotifyClient) LastArchiveTime() (time.Time, error) {
 	return time.Unix(int64(lastArchivedTimeStamp), 0), nil
 }
 
-func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
+func (c *SpotifyClient) UserSavedTracksSinceLastArchive() ([]SavedTrack, error) {
 	since, err := c.LastArchiveTime()
 
 	if err != nil {
