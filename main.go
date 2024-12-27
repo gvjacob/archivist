@@ -53,7 +53,6 @@ func archive() {
 	userSavedTracks, err := client.UserSavedTracksSinceLastArchive()
 
 	if err != nil {
-		log.Error("Failed to fetch user saved tracks")
 		log.Fatal(err)
 	}
 
@@ -62,7 +61,7 @@ func archive() {
 		return
 	}
 
-	var hasAddedTracks bool
+	var archivedTracks []storage.ArchivedTrack
 
 	for _, track := range userSavedTracks {
 		playlists, err := llm.GetPlaylistsToSaveTrackInto(playlists, track.Track)
@@ -78,14 +77,31 @@ func archive() {
 		}
 
 		for _, playlist := range playlists {
-			client.AddTracksToPlaylist(playlist, track.Track)
+			_, err := client.AddTracksToPlaylist(playlist, track.Track)
+
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+
 			log.Info(fmt.Sprintf("Added track '%s' to playlist '%s'", track.Track.Name, playlist.Name))
 
-			hasAddedTracks = true
+			archivedTracks = append(archivedTracks, storage.ArchivedTrack{
+				UserID:     user.ID,
+				PlaylistID: playlist.ID,
+			})
 		}
 	}
 
-	if hasAddedTracks {
-		users.UpdateUser(user)
+	if len(archivedTracks) > 0 {
+		archivedTracksTable := storage.NewArchivedTracks(db)
+
+		err = archivedTracksTable.Insert(archivedTracks)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Info("Archived tracks successfully")
 	}
 }
