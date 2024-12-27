@@ -28,7 +28,7 @@ func (u *UsersTable) GetUser() (*User, error) {
 
 func (u *UsersTable) UpdateUser(user *User) error {
 	_, err := u.Exec(
-		"UPDATE users SET access_token = $1, refresh_token = $2, WHERE id = $4",
+		"UPDATE users SET access_token = $1, refresh_token = $2 WHERE id = $3",
 		user.AccessToken,
 		user.RefreshToken,
 		user.ID,
