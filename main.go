@@ -29,7 +29,6 @@ func archive() {
 	db, err := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
 
 	if err != nil {
-		log.Error("Failed to connect to database")
 		log.Fatal(err)
 	}
 

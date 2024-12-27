@@ -27,7 +27,12 @@ type spotifyAuthTokens struct {
 }
 
 func Initialize() {
-	db, _ := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
+	db, err := storage.NewDatabase(os.Getenv("SQLITE_FILE_PATH"))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	c := &client{database: db}
 
 	if err := c.createTables(); err != nil {
