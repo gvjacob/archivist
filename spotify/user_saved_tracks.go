@@ -5,8 +5,6 @@ import (
 	"errors"
 	"net/http"
 	"time"
-
-	"github.com/charmbracelet/log"
 )
 
 type Artist struct {
@@ -65,6 +63,7 @@ func (c *SpotifyClient) UserSavedTracks() ([]SavedTrack, error) {
 		return nil, err
 	}
 
+	// TODO: Reconsider limit and add pagination support
 	resp, err := c.Get("https://api.spotify.com/v1/me/tracks?limit=20")
 
 	if err != nil {
