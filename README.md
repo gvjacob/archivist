@@ -8,7 +8,20 @@ Archivist lets you create "smart playlists". These playlists can describe, with 
 
 ## Development
 
-### Installation
+### Requirements
+
+- [Go](https://go.dev/) 1.22+
+- Spotify account and [API access](https://developer.spotify.com/)
+
+### Getting Started
+
+1. Copy `.env.sample` into `.env`.
+
+   ```
+   cp .env.sample .env
+   ```
+
+1. Fill in the environment variables in `.env`. You will need to register a Spotify application through the [API portal](https://developer.spotify.com/) and use the Spotify secrets.
 
 1. Install dependencies
 
@@ -16,6 +29,14 @@ Archivist lets you create "smart playlists". These playlists can describe, with 
    go get
    ```
 
-## Feature Ideas
+1. Initialize the program, which will create a local SQLite database, and seed it with your Spotify user data. Seeding user data may require a browser Spotify login, unless the `SPOTIFY_ACCESS_TOKEN` and `SPOTIFY_REFRESH_TOKEN` are provided in the `.env` file.
 
-- Generate a description that accurately describes a the songs in a non-archivist playlist.
+   ```
+   go run main.go init
+   ```
+
+1. Once database has been created and seeded, running the program will find tracks saved into Spotify's `Liked Songs` library _since account creation_, check whether they match any Archivist playlists, and save them into the playlists if so.
+
+   ```
+   go run main.go
+   ```
