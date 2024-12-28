@@ -2,7 +2,7 @@
 
 **Archivist** creates smart AI-powered playlists for your Spotify. Housekeeping is almost an impossible task when you've got hundreds of playlists and little to no patience for organizing your favorite tracks. With Archivist, housekeeping is a one-click chore.
 
-**This is an experimental AI program currently suited to my use case. Expect bugs and missing features!**
+**⚠️ This is an experimental AI program currently suited to my use case. Expect bugs and missing features!**
 
 ## How does it work?
 
@@ -17,6 +17,8 @@ Archivist: Favorite tracks from the Netflix show Arcane League of Legends
 ```
 
 Generally, the more descriptive the descriptions are, the more accurate Archivist will be when filing tracks. **If a track matches multiple playlists, it will be filed to all of them.**
+
+Archivist keeps a record of tracks that it has queried so it knows when there are new tracks saved into **Liked Songs**. These are the only tracks that are queried against for the next run.
 
 ## How does Archivist decide?
 
@@ -40,13 +42,16 @@ Name: Beatlesmania
 Description: Best of Beatles
 ```
 
-Archivist keeps a record of tracks that it has queried so it knows when there are new tracks saved into **Liked Songs**. These are the only tracks that are queried against for the next run.
+### Spotify Audio Features
+
+Spotify analyzes useful properties like a track's `energy`, `danceability` and `tempo`. These could've added extra dimensions to how Archivist matches tracks to playlists. Unforunately, Spotify has **deprecated** (womp womp) the [Audio Features endpoint](https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis).
 
 ## Development
 
 ### Requirements
 
 - [Go](https://go.dev/) 1.22+
+- [SQLite](https://www.sqlite.org/)
 - Spotify account and [API access](https://developer.spotify.com/)
 - OpenAI account
 
