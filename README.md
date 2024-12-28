@@ -4,7 +4,7 @@
 
 ## How does it work?
 
-Archivist lets you create "smart playlists". These playlists can describe, with natural language, the type of songs that should be included. When you save songs to your `Liked Songs` library, Archivist will automatically save them into the correct playlists based on their descriptions, which are editable via Spotify.
+Archivist lets you create "smart playlists". These playlists can describe, with natural language, the type of songs that should be included. When you save songs to your **Liked Songs** library, Archivist will automatically save them into the correct playlists based on their descriptions, which are editable via Spotify.
 
 ## Development
 
@@ -35,7 +35,7 @@ Archivist lets you create "smart playlists". These playlists can describe, with 
    go run main.go init
    ```
 
-1. Once database has been created and seeded, running the program will find tracks saved into Spotify's `Liked Songs` library _since account creation_, check whether they match any Archivist playlists, and save them into the playlists if so.
+1. Once database has been created and seeded, running the program will find tracks saved into Spotify's **Liked Songs** library _since account creation_, check whether they match any Archivist playlists, and save them into the playlists if so.
 
    ```
    go run main.go
