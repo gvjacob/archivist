@@ -4,6 +4,10 @@
 
 **⚠️ This is an experimental AI program currently suited to my use case. Expect bugs and missing features!**
 
+
+https://github.com/user-attachments/assets/53b48143-0e49-4773-b42d-6d3f784dc4fb
+
+
 ## How does it work?
 
 Archivist lets you create "smart playlists" with the help of GPT-4. These playlists can describe, with natural language, the type of songs that should be included. When you save songs to your **Liked Songs** library, Archivist will automatically save them into the correct playlists based on their descriptions, which are editable via Spotify. Since the Spotify API has no concept of webhooks, Archivist should be run as a cron job.
