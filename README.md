@@ -2,9 +2,45 @@
 
 **Archivist** creates smart AI-powered playlists for your Spotify. Housekeeping is almost an impossible task when you've got hundreds of playlists and little to no patience for organizing your favorite tracks. With Archivist, housekeeping is a one-click chore.
 
+**This is an experimental AI program currently suited to my use case. Expect bugs and missing features!**
+
 ## How does it work?
 
-Archivist lets you create "smart playlists". These playlists can describe, with natural language, the type of songs that should be included. When you save songs to your **Liked Songs** library, Archivist will automatically save them into the correct playlists based on their descriptions, which are editable via Spotify.
+Archivist lets you create "smart playlists" with the help of GPT-4. These playlists can describe, with natural language, the type of songs that should be included. When you save songs to your **Liked Songs** library, Archivist will automatically save them into the correct playlists based on their descriptions, which are editable via Spotify. Since the Spotify API has no concept of webhooks, Archivist should be run as a cron job.
+
+## Creating Archivist playlists
+
+Playlists are marked for Archivist if their description starts with the `Archivist:` prefix. Here's an example description for a playlist for Arcane music:
+
+```
+Archivist: Favorite tracks from the Netflix show Arcane League of Legends
+```
+
+Generally, the more descriptive the descriptions are, the more accurate Archivist will be when filing tracks. **If a track matches multiple playlists, it will be filed to all of them.**
+
+## How does Archivist decide?
+
+Currently, Archivist can only view tracks' information from the [**Get Several Tracks** endpoint](https://developer.spotify.com/documentation/web-api/reference/get-several-tracks). This includes the following properties (with examples):
+
+```
+Name: Let It Be
+Artists: The Beatles
+Album: Let It Be (Remastered)
+Album Type: album
+Album Release Date: 1970
+Genres: Rock, Classic Rock
+Duration Minutes: 4
+Explicit: false
+```
+
+Playlists are referenced by their name and description:
+
+```
+Name: Beatlesmania
+Description: Best of Beatles
+```
+
+Archivist keeps a record of tracks that it has queried so it knows when there are new tracks saved into **Liked Songs**. These are the only tracks that are queried against for the next run.
 
 ## Development
 
@@ -12,6 +48,7 @@ Archivist lets you create "smart playlists". These playlists can describe, with 
 
 - [Go](https://go.dev/) 1.22+
 - Spotify account and [API access](https://developer.spotify.com/)
+- OpenAI account
 
 ### Getting Started
 
